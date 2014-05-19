@@ -138,7 +138,8 @@ module Backburner
     #
     def work_one_job(conn = nil)
       conn ||= self.connection
-      job = Backburner::Job.new(conn.tubes.reserve)
+      job = Backburner::Job.new(conn.tubes.reserve(5))
+      return unless job
       self.log_job_begin(job.name, job.args)
       job.process
       self.log_job_end(job.name)
